@@ -1,26 +1,18 @@
-def workspace;
-node
-{
-    stage('Checkout')
-    {
-        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '0e58c990-80af-43ea-9f55-85c176bba12b', url: 'https://github.com/samsonawane/SampleProject.git']]])
-        workspace =pwd()
-    }
-    stage('Static Code Analysis')
-    {
-        echo "Static Code Analysis"
-    }
-    stage('Build')
-    {
-        echo "Build the code"
-    }
-    stage('Unit Testing')
-    {
-        echo "Unit Testing"
-    }
-    stage ('Delivery')
-    {
-        echo "Devliver the Code"
-    }
-    
+pipeline{
+		agent any
+		stages{
+			stage('SCM Checkout'){
+     git 'https://github.com/moolegovardhan/SampleProject'
+   }
+   stage('Compile-Package'){
+       def mvnHome = tool name: 'Maven', type: 'maven'
+       bat '${mvnHome}/bin/mvn package'
+   }
 }
+			stage('Deploy'){
+				steps{
+				echo 'Code Deployed'
+				}
+			}
+		}
+	}
