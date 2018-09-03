@@ -1,13 +1,10 @@
-pipeline{
-	agent any
-	stages{
-	stage('SCM Checkout'){
-   checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git-creds', url: 'https://github.com/moolegovardhan/SampleProject.git']]])
-
+node{
+   stage('SCM Checkout'){
+     git 'https://github.com/moolegovardhan/SampleProject'
    }
    stage('Compile-Package'){
-       def mvnHome = tool name: 'Maven', type: 'maven'
-       bat '${mvnHome}/bin/mvn package'
+      // Get maven home path
+      def mvnHome =  tool name: 'Maven', type: 'maven'   
+      sh "${mvnHome}/bin/mvn package"
    }
-}
 }
